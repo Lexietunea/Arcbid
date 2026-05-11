@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Auction — ArcBid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <div class="dot-grid"></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-arc">Arc</span><span class="logo-bid">Bid</span>
+        <span class="logo-tag">× Arcium</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="index.html#auctions">Auctions</a>
+        <a href="index.html#about">About</a>
+      </div>
+      <button class="btn-connect" id="connectWalletBtn">
+        <span class="btn-icon">◈</span>
+        <span class="btn-text">Connect Wallet</span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="create-section">
+    <div class="create-inner">
+      <div class="section-label">#CREATE — NEW AUCTION</div>
+      <h1 class="section-title" style="margin-bottom:0.5rem">Launch a Blind Auction</h1>
+      <p class="section-sub" style="margin-bottom:3rem">Your auction will be powered by Arcium MXE — all bids remain encrypted until the auction closes.</p>
+
+      <div class="create-form-grid">
+        <div class="create-form">
+          <div class="form-group">
+            <label>Auction Title</label>
+            <input type="text" placeholder="e.g. Genesis NFT Collection #001" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Asset Description</label>
+            <textarea placeholder="Describe what you're auctioning..." class="form-input form-textarea"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reserve Price (SOL)</label>
+              <input type="number" placeholder="0.00" class="form-input" min="0" step="0.01" />
+            </div>
+            <div class="form-group">
+              <label>Duration</label>
+              <select class="form-input form-select">
+                <option>1 Hour</option>
+                <option>6 Hours</option>
+                <option>12 Hours</option>
+                <option selected>24 Hours</option>
+                <option>48 Hours</option>
+                <option>7 Days</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Asset Type</label>
+            <div class="asset-type-grid">
+              <button class="asset-type-btn active">NFT</button>
+              <button class="asset-type-btn">Token Lot</button>
+              <button class="asset-type-btn">cNFT Bundle</button>
+              <button class="asset-type-btn">Custom</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Asset Address / Mint</label>
+            <input type="text" placeholder="Paste SPL token or NFT mint address" class="form-input mono-input" />
+          </div>
+          <div class="form-privacy-box">
+            <div class="fpb-header">
+              <span class="enc-pulse"></span>
+              Arcium MXE Privacy Settings
+            </div>
+            <div class="fpb-options">
+              <label class="fpb-option active-opt">
+                <input type="radio" name="privacy" checked />
+                <div>
+                  <strong>Full Blind</strong>
+                  <span>No bid amounts revealed until close. Maximum privacy.</span>
+                </div>
+              </label>
+              <label class="fpb-option">
+                <input type="radio" name="privacy" />
+                <div>
+                  <strong>Count Reveal</strong>
+                  <span>Bid count shown, amounts remain hidden.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+          <button class="btn-primary create-btn" onclick="handleCreateAuction()">
+            🔐 Deploy Encrypted Auction
+          </button>
+          <p class="create-disclaimer">Auction will be deployed to Solana Devnet. Arcium MXE cluster will handle bid encryption.</p>
+        </div>
+
+        <div class="create-preview">
+          <div class="preview-label">LIVE PREVIEW</div>
+          <div class="auction-card preview-card">
+            <div class="auction-status live"><span></span>LIVE</div>
+            <div class="auction-asset">
+              <div class="asset-icon">◈</div>
+              <div>
+                <div class="asset-name" id="previewTitle">Your Auction Title</div>
+                <div class="asset-creator">by Your Wallet</div>
+              </div>
+            </div>
+            <div class="auction-encrypted">
+              <div class="enc-label">Encrypted Bids</div>
+              <div class="enc-value">██ ███ ██████</div>
+              <div class="enc-count">0 sealed bids</div>
+            </div>
+            <div class="auction-timer">
+              <div class="timer-label">Duration</div>
+              <div class="timer-val">24h Blind</div>
+            </div>
+            <button class="btn-bid">Place Sealed Bid</button>
+          </div>
+          <div class="preview-tech-info">
+            <div class="pti-row"><span>Encryption</span><span class="pti-val arc">ARC-MXE v2</span></div>
+            <div class="pti-row"><span>Network</span><span class="pti-val">Solana Devnet</span></div>
+            <div class="pti-row"><span>Program</span><span class="pti-val mono">Arc1d...xMEV</span></div>
+            <div class="pti-row"><span>Proof System</span><span class="pti-val">ZK-SNARK</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wallet Modal (reused) -->
+  <div class="modal-overlay" id="walletModal">
+    <div class="modal-box">
+      <button class="modal-close" id="closeWalletModal">✕</button>
+      <div class="modal-header">
+        <div class="modal-title-badge">CONNECT WALLET</div>
+        <h2>Choose Your Wallet</h2>
+        <p>Connect to deploy your encrypted blind auction on Solana.</p>
+      </div>
+      <div class="wallet-options">
+        <button class="wallet-option" id="connectPhantom">
+          <div class="wallet-icon phantom-icon">👻</div>
+          <div class="wallet-info">
+            <div class="wallet-name">Phantom</div>
+            <div class="wallet-desc">Most popular Solana wallet</div>
+          </div>
+          <div class="wallet-arrow">→</div>
+        </button>
+        <button class="wallet-option" id="connectSolflare">
+          <div class="wallet-icon solflare-icon">☀️</div>
+          <div class="wallet-info">
+            <div class="wallet-name">Solflare</div>
+            <div class="wallet-desc">Non-custodial Solana wallet</div>
+          </div>
+          <div class="wallet-arrow">→</div>
+        </button>
+      </div>
+      <div class="modal-footer-text">
+        By connecting, you agree to the <a href="#">Terms of Service</a>.
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon">✓</span>
+    <span class="toast-msg" id="toastMsg">Action completed!</span>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Live preview title
+    const titleInput = document.querySelector('input[placeholder*="Genesis"]');
+    if (titleInput) {
+      titleInput.addEventListener('input', () => {
+        document.getElementById('previewTitle').textContent = titleInput.value || 'Your Auction Title';
+      });
+    }
+    // Asset type buttons
+    document.querySelectorAll('.asset-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.asset-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    function handleCreateAuction() {
+      const walletConnected = document.getElementById('connectWalletBtn').classList.contains('connected');
+      if (!walletConnected) {
+        document.getElementById('walletModal').classList.add('active');
+        return;
+      }
+      showToast('Auction deployed to Solana Devnet!');
+    }
+  </script>
+</body>
+</html>
