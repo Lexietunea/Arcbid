@@ -699,14 +699,14 @@ var cs=["0xa3f7 0x2c91 0xb4e8","0x7d12 0xf1a9 0x3e72","0x8c04 0xd6b1 0xe5a3","0x
 setInterval(function(){ci=(ci+1)%cs.length;document.querySelectorAll(".sciph").forEach(function(el){if(el.style.filter.indexOf("blur")!==-1)el.textContent=cs[ci]})},2300);
 
 var ll=["0x7f3a2c91...
-ARC-MXE-SEALED
+// ARC-MXE-SEALED
 ████ ██ █████","0xc4b1e728...
 ENC-BID-V2
 ███ █████ ██","0x9e2d4af1...
 ARC-MXE-SEALED
 █████ ███ ██","0x3fa8b501...
-ZK-PROOF-SIG
-██ ██████ ███"],li=0,lc=document.getElementById("lciph");
+// ZK-PROOF-SIG
+██ ██████ ███"],li=0,lc=document.getElementById="lciph"
 if(lc){lc.style.transition="opacity .3s";setInterval(function(){li=(li+1)%ll.length;lc.style.opacity="0";setTimeout(function(){lc.textContent=ll[li].replace(/\n/g,"
 ");lc.style.opacity="1"},280)},2800)}
 
